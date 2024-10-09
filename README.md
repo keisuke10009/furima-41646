@@ -30,13 +30,13 @@
 | condition_id           | integer   | null: false |
 | shipping_fee_charge_id | integer   | null: false |
 | area_id                | integer   | null: false |
-| shipping_days_id       | integer   | null: false |
+| shipping_day_id        | integer   | null: false |
 | price                  | integer   | null: false |
 | user                   | references| null: false,foreign_key: true |
 
 ### Association
 
-- has_many :users
+- belongs_to :user
 - has_one :purchase
 
 ## purchasesテーブル
@@ -59,8 +59,8 @@
 | zip                 | string    | null: false |
 | area_id             | integer   | null: false |
 | city                | string    | null: false |
-| address_line1       | string    | null: false |
-| address_line2       | string    | null: true  |
+| street_address      | string    | null: false |
+| building_name       | string    |             |
 | telephone_number    | string    | null: false |
 | purchase            | references| null: false,foreign_key: true |
 
