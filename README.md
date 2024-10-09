@@ -22,17 +22,17 @@
 
 ##  itemsテーブル
 
-| Column              | Type      | Options     |
-| ------------------- | --------- | ----------- |
-| name                | text      | null: false |
-| explanation         | text      | null: false |
-| category            | integer   | null: false |
-| condition           | integer   | null: false |
-| shipping_fee_charge | integer   | null: false |
-| area                | integer   | null: false |
-| shipping_days       | integer   | null: false |
-| price               | integer   | null: false |
-| user                | references| null: false,foreign_key: true |
+| Column                 | Type      | Options     |
+| ---------------------- | --------- | ----------- |
+| name                   | string    | null: false |
+| explanation            | text      | null: false |
+| category_id            | integer   | null: false |
+| condition_id           | integer   | null: false |
+| shipping_fee_charge_id | integer   | null: false |
+| area_id                | integer   | null: false |
+| shipping_days_id       | integer   | null: false |
+| price                  | integer   | null: false |
+| user                   | references| null: false,foreign_key: true |
 
 ### Association
 
@@ -48,6 +48,7 @@
 
 ### Association
 
+- has_one :shipping
 - belongs_to :item
 - belongs_to :user
 
@@ -55,12 +56,12 @@
 
 | Column              | Type      | Options     |
 | ------------------- | --------- | ----------- |
-| zip                 | integer   | null: false |
-| state               | integer   | null: false |
-| city                | text      | null: false |
-| address_line1       | text      | null: false |
-| address_line2       | text      | null: true  |
-| telephone_number    | integer   | null: false |
+| zip                 | string    | null: false |
+| area_id             | integer   | null: false |
+| city                | string    | null: false |
+| address_line1       | string    | null: false |
+| address_line2       | string    | null: true  |
+| telephone_number    | string    | null: false |
 | purchase            | references| null: false,foreign_key: true |
 
 ### Association
