@@ -5,8 +5,9 @@ class Item < ApplicationRecord
   belongs_to :condition
   belongs_to :shippingDay
   belongs_to :shippingFeeCharge
+  has_one_attached :image
 
-  validates :name, :content, :price, presence: true
+  validates :name, :explanation, :price, presence: true
   validates :category_id, :condition_id, :shipping_fee_charge_id, :area_id, :shipping_day_id,
             numericality: { other_than: 0, message: "can't be blank" }
 
