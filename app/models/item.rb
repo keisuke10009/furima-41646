@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   extend ActiveHash::Associations::ActiveRecordExtensions
+  belongs_to :user
   belongs_to :area
   belongs_to :category
   belongs_to :condition
@@ -7,12 +8,15 @@ class Item < ApplicationRecord
   belongs_to :shippingFeeCharge
   has_one_attached :image
 
-  validates :name, :explanation, :price, presence: true
+  validates :image, :name, :explanation, :price, presence: true
   validates :category_id, :condition_id, :shipping_fee_charge_id, :area_id, :shipping_day_id,
             numericality: { other_than: 0, message: "can't be blank" }
 
-  validates :price, format: { with: /\A[0-9]+\z/, message: 'is invalid. Input half-width integers' }
+  validates :price, numericality: { only_integer: true, message: 'is not a number' }
   validates :price,
-            numericality: { only_integer: true, greater_than_or_equal_to: 300, less_than_or_equal_to: 9_999_999,
-                            message: 'は300から999,999の範囲で入力してください' }
+            numericality: { greater_than_or_equal_to: 300,
+                            message: 'must be greater than or equal to 300' }
+  validates :price,
+            numericality: { less_than_or_equal_to: 9_999_999,
+                            message: 'must be less than or equal to 9999999' }
 end
