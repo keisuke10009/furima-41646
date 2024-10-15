@@ -22,7 +22,7 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    return unless current_user.id != Item.find(params[:id]).user_id
+    return unless current_user.id != @item.user_id
 
     redirect_to action: :index
   end
