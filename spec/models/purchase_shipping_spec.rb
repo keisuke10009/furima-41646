@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe PurchaseShipping, type: :model do
   before do
-    @purchase_shipping = FactoryBot.build(:purchase_shipping)
+    user = FactoryBot.create(:user)
+    item = FactoryBot.create(:item)
+    @purchase_shipping = FactoryBot.build(:purchase_shipping, user_id: user.id, item_id: item.id)
   end
+
   describe '購入・配送先登録' do
     context '新規登録できるとき' do
       it 'item_id, user_id, zip, area_id, city, street_address, building_name, telephone_number, purchase_idが存在すれば登録できる' do
@@ -15,12 +18,12 @@ RSpec.describe PurchaseShipping, type: :model do
       end
     end
     context '新規登録できないとき' do
-      it 'item_idが空では登録できない' do
+      it 'item_idが紐ついていなければ購入できない' do
         @purchase_shipping.item_id = ''
         @purchase_shipping.valid?
         expect(@purchase_shipping.errors.full_messages).to include("Item can't be blank")
       end
-      it 'user_idが空では登録できない' do
+      it 'user_idが紐ついていなければ購入できない' do
         @purchase_shipping.user_id = ''
         @purchase_shipping.valid?
         expect(@purchase_shipping.errors.full_messages).to include("User can't be blank")
@@ -55,8 +58,8 @@ RSpec.describe PurchaseShipping, type: :model do
         @purchase_shipping.valid?
         expect(@purchase_shipping.errors.full_messages).to include("Token can't be blank")
       end
-      it 'zipが郵便番号意外では登録できない' do
-        @purchase_shipping.zip = '123-123456'
+      it '郵便番号が半角ハイフンを含む形でなければ購入できない' do
+        @purchase_shipping.zip = '1231234'
         @purchase_shipping.valid?
         expect(@purchase_shipping.errors.full_messages).to include('Zip is invalid. Include both letters and numbers')
       end
@@ -70,10 +73,20 @@ RSpec.describe PurchaseShipping, type: :model do
         @purchase_shipping.valid?
         expect(@purchase_shipping.errors.full_messages).to include('Street address is invalid. Input full-width and half-width characters')
       end
-      it 'telephone_numberが電話番号の形式意外では登録できない' do
-        @purchase_shipping.telephone_number = 'abcdefg'
+      it 'telephone_numberが9桁以下では登録できない' do
+        @purchase_shipping.telephone_number = '123456789'
         @purchase_shipping.valid?
-        expect(@purchase_shipping.errors.full_messages).to include('Telephone number is invalid. Include both letters and numbers')
+        expect(@purchase_shipping.errors.full_messages).to include('Telephone number is invalid. Telephone number must contain 10 or 11 digits.')
+      end
+      it 'telephone_numberが12桁以上だと登録できない' do
+        @purchase_shipping.telephone_number = '123456789012'
+        @purchase_shipping.valid?
+        expect(@purchase_shipping.errors.full_messages).to include('Telephone number is invalid. Telephone number must contain 10 or 11 digits.')
+      end
+      it 'telephone_numberが半角数字意外だと登録できない' do
+        @purchase_shipping.telephone_number = 'abcdefghijk'
+        @purchase_shipping.valid?
+        expect(@purchase_shipping.errors.full_messages).to include('Telephone number is invalid. Telephone number is not a number.')
       end
     end
   end

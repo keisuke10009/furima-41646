@@ -5,7 +5,7 @@ class PurchasesController < ApplicationController
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
     @purchase = Purchase.find_by(item_id: params[:item_id])
     if @purchase.nil?
-      @item = Item.find(params[:item_id])
+      item_from_id
       @purchase_shipping = PurchaseShipping.new
       redirect_to root_path if @item.user_id == current_user.id
     else
@@ -14,7 +14,7 @@ class PurchasesController < ApplicationController
   end
 
   def create
-    @item = Item.find(params[:item_id])
+    item_from_id
     @purchase_shipping = PurchaseShipping.new(purchase_params)
     if @purchase_shipping.valid?
       pay_item
@@ -35,6 +35,10 @@ class PurchasesController < ApplicationController
       card: purchase_params[:token],
       currency: 'jpy'
     )
+  end
+
+  def item_from_id
+    @item = Item.find(params[:item_id])
   end
 
   def purchase_params
