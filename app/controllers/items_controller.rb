@@ -1,8 +1,10 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :edit, :destroy]
   before_action :item_from_id, only: [:show, :edit, :update, :destroy]
+  before_action :purchase_from_id, only: [:show, :edit]
   def index
     @items = Item.all.order(created_at: :desc)
+    @purchases = Purchase.all
   end
 
   def new
@@ -22,6 +24,9 @@ class ItemsController < ApplicationController
   end
 
   def edit
+    return unless @purchase.length != 0
+
+    redirect_to action: :index
     return unless current_user.id != @item.user_id
 
     redirect_to action: :index
@@ -53,5 +58,9 @@ class ItemsController < ApplicationController
 
   def item_from_id
     @item = Item.find(params[:id])
+  end
+
+  def purchase_from_id
+    @purchase = Purchase.all.where(item_id: params[:id])
   end
 end
