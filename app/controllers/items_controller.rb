@@ -24,12 +24,9 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    return unless @purchase.length != 0
-
-    redirect_to action: :index
-    return unless current_user.id != @item.user_id
-
-    redirect_to action: :index
+    if @purchase.length != 0 || current_user.id != @item.user_id
+      redirect_to root_path
+    end
   end
 
   def update
